@@ -10,11 +10,11 @@ export class TaskService {
   async getById(id: string) {
     const task = this.prisma.task.findUnique({
       where: {
-        id: +id
-      }
+        id: +id,
+      },
     });
 
-    if (!task) throw new NotFoundException('Task not found');
+    if (!task) throw new NotFoundException("Task not found");
 
     return task;
   }
@@ -25,7 +25,7 @@ export class TaskService {
 
   create(dto: TaskDto) {
     return this.prisma.task.create({
-      data: dto
+      data: dto,
     });
   }
 
@@ -34,11 +34,32 @@ export class TaskService {
 
     return this.prisma.task.update({
       where: {
-        id: task.id
+        id: task.id,
       },
       data: {
-        isDone: !task.isDone
-      }
+        isDone: !task.isDone,
+      },
+    });
+  }
+
+  async update(id: string, dto: TaskDto) {
+    const task = await this.getById(id);
+
+    return this.prisma.task.update({
+      where: {
+        id: task.id,
+      },
+      data: dto,
+    });
+  }
+
+  async delete(id: string) {
+    const task = await this.getById(id);
+
+    return this.prisma.task.delete({
+      where: {
+        id: task.id,
+      },
     });
   }
 }
